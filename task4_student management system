@@ -1,0 +1,61 @@
+class Student:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+        self.courses = []
+        self.grades = {}
+
+    def enroll_course(self, course):
+        self.courses.append(course)
+        course.students.append(self)
+
+    def assign_grade(self, course, grade):
+        self.grades[course] = grade
+
+    def calculate_gpa(self):
+        total_points = 0
+        total_credits = 0
+        for course, grade in self.grades.items():
+            total_points += course.credits * grade.points
+            total_credits += course.credits
+        return total_points / total_credits
+
+
+class Course:
+    def __init__(self, code, name, credits, students=None):
+        self.code = code
+        self.name = name
+        self.credits = credits
+        if students is None:
+            students = []
+        self.students = students
+
+
+class Grade:
+    def __init__(self, grade_value, points):
+        self.grade_value = grade_value
+        self.points = points
+
+
+# Example usage
+student1 = Student("1", "John Doe")
+student2 = Student("2", "Jane Doe")
+
+course1 = Course("CS101", "Introduction to Computer Science", 3)
+course2 = Course("MATH101", "Calculus I", 4)
+
+student1.enroll_course(course1)
+student1.enroll_course(course2)
+
+student2.enroll_course(course1)
+
+grade1 = Grade("A", 4)
+grade2 = Grade("B", 3)
+
+student1.assign_grade(course1, grade1)
+student1.assign_grade(course2, grade2)
+
+student2.assign_grade(course1, grade2)
+
+print(student1.calculate_gpa())
+print(student2.calculate_gpa())
