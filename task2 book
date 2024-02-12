@@ -1,0 +1,80 @@
+class Book:
+    def __init__(self, book_id, title, author, available=True):
+        self.book_id = book_id
+        self.title = title
+        self.author = author
+        self.available = available
+
+    def __str__(self):
+        return f"Book ID: {self.book_id}, Title: {self.title}, Author: {self.author}, Available: {self.available}"
+
+
+class Library:
+    def __init__(self):
+        self.books = []
+
+    def add_book(self, book):
+        self.books.append(book)
+
+    def display_available_books(self):
+        available_books = [book for book in self.books if book.available]
+        for book in available_books:
+            print(book)
+
+    def borrow_book(self, book_id, member):
+        for book in self.books:
+            if book.book_id == book_id and book.available:
+                book.available = False
+                member.borrowed_books.append(book)
+                print(f"{member.name} has successfully borrowed '{book.title}'")
+                return True
+        print(f"Book with ID {book_id} not available for borrowing.")
+        return False
+
+    def return_book(self, book_id, member):
+        for book in member.borrowed_books:
+            if book.book_id == book_id:
+                book.available = True
+                member.borrowed_books.remove(book)
+                print(f"{member.name} has successfully returned '{book.title}'")
+                return True
+        print(f"You did not borrow a book with ID {book_id}")
+        return False
+
+
+class Member:
+    def __init__(self, member_id, name):
+        self.member_id = member_id
+        self.name = name
+        self.borrowed_books = []
+
+    def __str__(self):
+        return f"Member ID: {self.member_id}, Name: {self.name}, Borrowed Books: {len(self.borrowed_books)}"
+
+
+# Example Usage:
+book1 = Book(1, "The Catcher in the Rye", "J.D. Salinger")
+book2 = Book(2, "To Kill a Mockingbird", "Harper Lee")
+book3 = Book(3, "1984", "George Orwell")
+
+library = Library()
+library.add_book(book1)
+library.add_book(book2)
+library.add_book(book3)
+
+member1 = Member(101, "Alice")
+member2 = Member(102, "Bob")
+
+print("Available Books:")
+library.display_available_books()
+
+library.borrow_book(1, member1)
+library.borrow_book(2, member2)
+
+print("\nLibrary Status after borrowing:")
+library.display_available_books()
+
+library.return_book(1, member1)
+
+print("\nLibrary Status after returning:")
+library.display_available_books()
