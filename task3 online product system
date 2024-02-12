@@ -1,0 +1,67 @@
+class Product:
+    def __init__(self, name, price, stock_quantity):
+        self.name = name
+        self.price = price
+        self.stock_quantity = stock_quantity
+
+    def __repr__(self):
+        return f"Product('{self.name}', {self.price}, {self.stock_quantity})"
+
+
+class ShoppingCart:
+    def __init__(self):
+        self.products = []
+
+    def add_product(self, product, quantity):
+        self.products.append((product, quantity))
+        product.stock_quantity -= quantity
+
+    def remove_product(self, product):
+        for i, (p, q) in enumerate(self.products):
+            if p == product:
+                self.products.pop(i)
+                product.stock_quantity += q
+
+    def get_total_cost(self):
+        return sum(p.price * q for p, q in self.products)
+
+
+class User:
+    def __init__(self, username):
+        self.username = username
+        self.order_history = []
+
+    def login(self):
+        # Implement login functionality here
+        pass
+
+    def logout(self):
+        # Implement logout functionality here
+        pass
+
+    def add_order_to_history(self, shopping_cart):
+        self.order_history.append(shopping_cart.products.copy())
+        for product, quantity in shopping_cart.products:
+            product.stock_quantity += quantity
+        shopping_cart.products.clear()
+
+
+# Example usage
+product1 = Product("Product 1", 10, 100)
+product2 = Product("Product 2", 20, 50)
+
+shopping_cart = ShoppingCart()
+
+shopping_cart.add_product(product1, 5)
+shopping_cart.add_product(product2, 3)
+
+print(shopping_cart.get_total_cost())
+
+user1 = User("User 1")
+user1.login()
+
+user1.add_order_to_history(shopping_cart)
+
+print(user1.order_history)
+
+user1.logout()
